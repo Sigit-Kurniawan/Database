@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 28, 2024 at 02:48 AM
+-- Generation Time: Oct 28, 2024 at 07:04 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -32,7 +32,7 @@ CREATE TABLE `account` (
   `email` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `no_hp` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `password` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `role` enum('Admin','Montir','Customer','') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `role` enum('customer','montir','admin','') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `photo` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -41,11 +41,14 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`name`, `email`, `no_hp`, `password`, `role`, `photo`) VALUES
-('Citra', 'citra@gmail.com', '1234567890', '$2y$10$7cXK7T5GaFHzTQeldeVvquI03Flmd.79u4kX17VW9d1M/.wo8ysmS', 'Admin', NULL),
-('Meigita', 'meigita@gmail.com', '777777777777', 'Meigita66', 'Montir', NULL),
-('Rahayu', 'rahayu@gmail.com', '1234567999', '$2y$10$22lY5AGyDamPds9bah1mZOsCEbgYF1GJaL.fxoGp6N8gdUxtpZTFK', 'Customer', NULL),
-('Sigit Bebas', 'sigit@g.com', '8523645879', 'Asd123@#', 'Customer', NULL),
-('Naraya Albani', 'v@g.com', '0852336124', 'Asd123@#', 'Customer', NULL);
+('Citra', 'citra@gmail.com', '0888888888', '$2y$10$tc5lbC/DtnQkGHaEhhaxIeD/AeF/POTjeD6aIkPJGf5DsGeCc8b7W', 'customer', NULL),
+('danial', 'danial@gmail.com', '123', '$2y$10$huN5vxs0RHG8AEalV79lH.77j9X7RDd1yWOXDp7RNXx3mYcVcFCSG', 'customer', NULL),
+('Meigita', 'meigita@gmail.com', '777777777777', 'Meigita66', 'montir', NULL),
+('Rahayu', 'rahayu@gmail.com', '1234567999', '$2y$10$22lY5AGyDamPds9bah1mZOsCEbgYF1GJaL.fxoGp6N8gdUxtpZTFK', 'customer', NULL),
+('Sigit Bebas', 'sigit@g.com', '8523645879', 'Asd123@#', 'customer', NULL),
+('ads', 'tes', '123', '$2y$10$7givvbH0FKqt0.AajAOSiOtIQUX/N30nt7/k7QEe2hy/dcJa8aMwa', 'customer', NULL),
+('tes', 'tes@tes', '123', '$2y$10$sEiE5khQzPbgp0omN58MKuDa8wy/8igZ3B.3/AcNIZQueZSbwUy8C', 'customer', NULL),
+('Naraya Albani', 'v@g.com', '0852336124', 'Asd123@#', 'customer', NULL);
 
 -- --------------------------------------------------------
 
@@ -309,10 +312,10 @@ INSERT INTO `layanan_servis` (`id_jenis_servis`, `id_layanan_servis`, `nama_laya
 -- (See below for the actual view)
 --
 CREATE TABLE `view_montir_orders` (
-`id_montir` char(5)
+`tgl_booking` date
+,`id_montir` char(5)
 ,`nama_montir` varchar(40)
 ,`status_montir` varchar(7)
-,`tgl_booking` date
 ,`total_order` bigint
 );
 
@@ -334,12 +337,12 @@ CREATE TABLE `view_pemasukan` (
 -- (See below for the actual view)
 --
 CREATE TABLE `view_riwayat` (
-`barang` text
-,`layanan` text
+`tgl_booking` date
 ,`nama_customer` varchar(40)
-,`tgl_booking` date
-,`total` decimal(32,0)
 ,`total_booking` bigint
+,`total` decimal(32,0)
+,`layanan` text
+,`barang` text
 );
 
 -- --------------------------------------------------------
