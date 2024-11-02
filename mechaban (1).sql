@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 28, 2024 at 07:04 AM
+-- Generation Time: Nov 02, 2024 at 08:16 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -33,7 +33,7 @@ CREATE TABLE `account` (
   `no_hp` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `password` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `role` enum('customer','montir','admin','') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `photo` blob
+  `photo` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -41,13 +41,12 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`name`, `email`, `no_hp`, `password`, `role`, `photo`) VALUES
-('Citra', 'citra@gmail.com', '0888888888', '$2y$10$tc5lbC/DtnQkGHaEhhaxIeD/AeF/POTjeD6aIkPJGf5DsGeCc8b7W', 'customer', NULL),
-('danial', 'danial@gmail.com', '123', '$2y$10$huN5vxs0RHG8AEalV79lH.77j9X7RDd1yWOXDp7RNXx3mYcVcFCSG', 'customer', NULL),
-('Meigita', 'meigita@gmail.com', '777777777777', 'Meigita66', 'montir', NULL),
-('Rahayu', 'rahayu@gmail.com', '1234567999', '$2y$10$22lY5AGyDamPds9bah1mZOsCEbgYF1GJaL.fxoGp6N8gdUxtpZTFK', 'customer', NULL),
+('citra', 'citra@gmail.com', '098765', '$2y$10$08XDnAW1SkafxrVENiNOY.LEbcapRxD1cRfMsjAcM8tFs9PJNR71y', 'customer', NULL),
+('Danial', 'danial@gmail.com', '666666666', '$2y$10$b1xTQu64w6ORKa4bRGDPaOuRx0gmRZXqs9c137H4IJa/CmeEHqBYy', 'admin', NULL),
+('lili', 'lili@gmail.com', '88888888', '$2y$10$xqJfo4r8KA5kyHKj1F/NYeJ8ZEYY9GPAB0BiCCh92mQLpW.KU.MUi', 'customer', NULL),
+('Naraya', 'naraya@gmail.com', '23456789', '$2y$10$FNirsullykq.5ZmOS0j0BurkzPbxFjr4s0yEBFlA44uG1HTNtJtDm', 'customer', NULL),
+('Rahayu', 'rahayu@gmail.com', '098765', '$2y$10$Vs4zTq4GKjKnlCxNJco5WuJBGSX./tyAHSsXPy30opR91qYEdlca2', 'customer', NULL),
 ('Sigit Bebas', 'sigit@g.com', '8523645879', 'Asd123@#', 'customer', NULL),
-('ads', 'tes', '123', '$2y$10$7givvbH0FKqt0.AajAOSiOtIQUX/N30nt7/k7QEe2hy/dcJa8aMwa', 'customer', NULL),
-('tes', 'tes@tes', '123', '$2y$10$sEiE5khQzPbgp0omN58MKuDa8wy/8igZ3B.3/AcNIZQueZSbwUy8C', 'customer', NULL),
 ('Naraya Albani', 'v@g.com', '0852336124', 'Asd123@#', 'customer', NULL);
 
 -- --------------------------------------------------------
@@ -105,14 +104,6 @@ CREATE TABLE `booking` (
   `nopol` varchar(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `booking`
---
-
-INSERT INTO `booking` (`id_booking`, `tgl_booking`, `total_biaya`, `metode_bayar`, `nopol`) VALUES
-('b1101', '2024-10-24', 35000, 'Tunai', 'A 1234 BC'),
-('b1102', '2024-10-24', 25000, 'Tunai', 'A 1234 BC');
-
 -- --------------------------------------------------------
 
 --
@@ -133,7 +124,6 @@ CREATE TABLE `car` (
 --
 
 INSERT INTO `car` (`nopol`, `merk`, `type`, `transmition`, `year`, `email_customer`) VALUES
-('A 1234 BC', 'Honda', '-', 'manual', 2010, 'rahayu@gmail.com'),
 ('T1234RE', 'Honda', 'Civic', 'auto', 2005, 'sigit@g.com');
 
 -- --------------------------------------------------------
@@ -172,14 +162,6 @@ CREATE TABLE `detail_booking` (
   `id_barang` char(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `subtotal` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `detail_booking`
---
-
-INSERT INTO `detail_booking` (`id_detail_booking`, `id_booking`, `id_layanan_servis`, `id_barang`, `subtotal`) VALUES
-('db001', 'b1101', 'LV001', 'bar01', 35000),
-('db002', 'b1102', 'LV002', NULL, 25000);
 
 --
 -- Triggers `detail_booking`
@@ -234,16 +216,6 @@ CREATE TABLE `detail_servis_montir` (
   `id_anggota_montir` char(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `detail_servis_montir`
---
-
-INSERT INTO `detail_servis_montir` (`id_det_servis_montir`, `id_detail_booking`, `id_ketua_montir`, `id_anggota_montir`) VALUES
-('mont01', 'db001', 'mon01', 'am001'),
-('mont02', 'db001', 'mon01', 'am002'),
-('mont03', 'db002', 'mon01', 'am001'),
-('mont04', 'db002', 'mon01', 'am003');
-
 -- --------------------------------------------------------
 
 --
@@ -276,13 +248,6 @@ CREATE TABLE `ketua_montir` (
   `no_hp` varchar(13) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `ketua_montir`
---
-
-INSERT INTO `ketua_montir` (`id_ketua_montir`, `nama_ketua_montir`, `email_ketua_montir`, `no_hp`) VALUES
-('mon01', 'Meigita', 'meigita@gmail.com', '');
-
 -- --------------------------------------------------------
 
 --
@@ -304,6 +269,20 @@ INSERT INTO `layanan_servis` (`id_jenis_servis`, `id_layanan_servis`, `nama_laya
 ('SV111', 'LV001', 'Tambal Ban', 20000),
 ('SV111', 'LV002', 'Gant Ban', 25000),
 ('SV112', 'LV003', 'Ganti Oli', 30000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `review_customer`
+--
+
+CREATE TABLE `review_customer` (
+  `id_review` char(7) NOT NULL,
+  `email_customer` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `teks_review` varchar(500) NOT NULL,
+  `rating` int NOT NULL,
+  `tgl_review` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -460,6 +439,13 @@ ALTER TABLE `layanan_servis`
   ADD KEY `fk_jenis_servis` (`id_jenis_servis`);
 
 --
+-- Indexes for table `review_customer`
+--
+ALTER TABLE `review_customer`
+  ADD PRIMARY KEY (`id_review`),
+  ADD KEY `fk_email_cus` (`email_customer`);
+
+--
 -- Constraints for dumped tables
 --
 
@@ -508,6 +494,12 @@ ALTER TABLE `ketua_montir`
 --
 ALTER TABLE `layanan_servis`
   ADD CONSTRAINT `fk_jenis_servis` FOREIGN KEY (`id_jenis_servis`) REFERENCES `jenis_servis` (`id_jenis_servis`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `review_customer`
+--
+ALTER TABLE `review_customer`
+  ADD CONSTRAINT `fk_email_cus` FOREIGN KEY (`email_customer`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
