@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 02, 2024 at 08:16 AM
+-- Generation Time: Nov 03, 2024 at 10:14 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -41,9 +41,11 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`name`, `email`, `no_hp`, `password`, `role`, `photo`) VALUES
+('Naraya Albani', 'albani@gmail.com', '08123123123', '$2y$10$my8fPqd4z5piw5LXP5rsT.TED3z4JU2O/ooUtQY7.1dnhLmOwPFy2', 'customer', NULL),
 ('citra', 'citra@gmail.com', '098765', '$2y$10$08XDnAW1SkafxrVENiNOY.LEbcapRxD1cRfMsjAcM8tFs9PJNR71y', 'customer', NULL),
 ('Danial', 'danial@gmail.com', '666666666', '$2y$10$b1xTQu64w6ORKa4bRGDPaOuRx0gmRZXqs9c137H4IJa/CmeEHqBYy', 'admin', NULL),
 ('lili', 'lili@gmail.com', '88888888', '$2y$10$xqJfo4r8KA5kyHKj1F/NYeJ8ZEYY9GPAB0BiCCh92mQLpW.KU.MUi', 'customer', NULL),
+('Naraya Albani', 'naraya.albani@gmail.com', '83832566069', 'Asd123@#', 'customer', 'naraya_albani.jpg'),
 ('Naraya', 'naraya@gmail.com', '23456789', '$2y$10$FNirsullykq.5ZmOS0j0BurkzPbxFjr4s0yEBFlA44uG1HTNtJtDm', 'customer', NULL),
 ('Rahayu', 'rahayu@gmail.com', '098765', '$2y$10$Vs4zTq4GKjKnlCxNJco5WuJBGSX./tyAHSsXPy30opR91qYEdlca2', 'customer', NULL),
 ('Sigit Bebas', 'sigit@g.com', '8523645879', 'Asd123@#', 'customer', NULL),
@@ -124,7 +126,8 @@ CREATE TABLE `car` (
 --
 
 INSERT INTO `car` (`nopol`, `merk`, `type`, `transmition`, `year`, `email_customer`) VALUES
-('T1234RE', 'Honda', 'Civic', 'auto', 2005, 'sigit@g.com');
+('H64H', 'Honda', 'Civic', 'manual', '2010', 'naraya.albani@gmail.com'),
+('T1234RE', 'Honda', 'Civic', 'auto', '2005', 'sigit@g.com');
 
 -- --------------------------------------------------------
 
@@ -146,7 +149,8 @@ CREATE TABLE `data_komponen` (
 
 CREATE TABLE `data_servis` (
   `id_data_servis` char(7) NOT NULL,
-  `nama_servis` varchar(30) NOT NULL
+  `nama_servis` varchar(30) NOT NULL,
+  `harga_servis` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -273,6 +277,26 @@ INSERT INTO `layanan_servis` (`id_jenis_servis`, `id_layanan_servis`, `nama_laya
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `otp`
+--
+
+CREATE TABLE `otp` (
+  `email` varchar(100) NOT NULL,
+  `otp_code` char(4) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `otp`
+--
+
+INSERT INTO `otp` (`email`, `otp_code`, `time`) VALUES
+('tes', '3424', '2024-11-03 22:03:50'),
+('bjbj', '4363', '2024-11-03 22:07:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `review_customer`
 --
 
@@ -331,7 +355,7 @@ CREATE TABLE `view_riwayat` (
 --
 DROP TABLE IF EXISTS `view_montir_orders`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_montir_orders`  AS SELECT `b`.`tgl_booking` AS `tgl_booking`, `km`.`id_ketua_montir` AS `id_montir`, `km`.`nama_ketua_montir` AS `nama_montir`, 'Ketua' AS `status_montir`, count(distinct `db`.`id_detail_booking`) AS `total_order` FROM (((`detail_booking` `db` join `booking` `b` on((`db`.`id_booking` = `b`.`id_booking`))) join `detail_servis_montir` `ds` on((`db`.`id_detail_booking` = `ds`.`id_detail_booking`))) join `ketua_montir` `km` on((`ds`.`id_ketua_montir` = `km`.`id_ketua_montir`))) GROUP BY `b`.`tgl_booking`, `km`.`id_ketua_montir`, `km`.`nama_ketua_montir` union all select `b`.`tgl_booking` AS `tgl_booking`,`am`.`id_anggota_montir` AS `id_montir`,`am`.`nama_anggota_montir` AS `nama_montir`,'Anggota' AS `status_montir`,count(distinct `db`.`id_detail_booking`) AS `total_order` from (((`detail_booking` `db` join `booking` `b` on((`db`.`id_booking` = `b`.`id_booking`))) join `detail_servis_montir` `ds` on((`db`.`id_detail_booking` = `ds`.`id_detail_booking`))) join `anggota_montir` `am` on((`ds`.`id_anggota_montir` = `am`.`id_anggota_montir`))) group by `b`.`tgl_booking`,`am`.`id_anggota_montir`,`am`.`nama_anggota_montir` order by `tgl_booking` desc  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_montir_orders`  AS SELECT `b`.`tgl_booking` AS `tgl_booking`, `km`.`id_ketua_montir` AS `id_montir`, `km`.`nama_ketua_montir` AS `nama_montir`, 'Ketua' AS `status_montir`, count(distinct `db`.`id_detail_booking`) AS `total_order` FROM (((`detail_booking` `db` join `booking` `b` on((`db`.`id_booking` = `b`.`id_booking`))) join `detail_servis_montir` `ds` on((`db`.`id_detail_booking` = `ds`.`id_detail_booking`))) join `ketua_montir` `km` on((`ds`.`id_ketua_montir` = `km`.`id_ketua_montir`))) GROUP BY `b`.`tgl_booking`, `km`.`id_ketua_montir`, `km`.`nama_ketua_montir`union all select `b`.`tgl_booking` AS `tgl_booking`,`am`.`id_anggota_montir` AS `id_montir`,`am`.`nama_anggota_montir` AS `nama_montir`,'Anggota' AS `status_montir`,count(distinct `db`.`id_detail_booking`) AS `total_order` from (((`detail_booking` `db` join `booking` `b` on((`db`.`id_booking` = `b`.`id_booking`))) join `detail_servis_montir` `ds` on((`db`.`id_detail_booking` = `ds`.`id_detail_booking`))) join `anggota_montir` `am` on((`ds`.`id_anggota_montir` = `am`.`id_anggota_montir`))) group by `b`.`tgl_booking`,`am`.`id_anggota_montir`,`am`.`nama_anggota_montir` order by `tgl_booking` desc  ;
 
 -- --------------------------------------------------------
 
@@ -340,7 +364,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `view_pemasukan`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_pemasukan`  AS SELECT `booking`.`tgl_booking` AS `tgl_booking`, sum(`booking`.`total_biaya`) AS `total_pemasukan` FROM `booking` GROUP BY `booking`.`tgl_booking` ORDER BY `booking`.`tgl_booking` AS `DESCdesc` ASC  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_pemasukan`  AS SELECT `booking`.`tgl_booking` AS `tgl_booking`, sum(`booking`.`total_biaya`) AS `total_pemasukan` FROM `booking` GROUP BY `booking`.`tgl_booking` ORDER BY `booking`.`tgl_booking` ASC ;
 
 -- --------------------------------------------------------
 
@@ -349,7 +373,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `view_riwayat`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_riwayat`  AS SELECT `b`.`tgl_booking` AS `tgl_booking`, `a`.`name` AS `nama_customer`, count(`b`.`id_booking`) AS `total_booking`, sum(`db`.`subtotal`) AS `total`, group_concat(distinct `lv`.`nama_layanan` order by `lv`.`nama_layanan` ASC separator ', ') AS `layanan`, group_concat(distinct `bar`.`nama_barang` order by `bar`.`nama_barang` ASC separator ', ') AS `barang` FROM (((((`booking` `b` join `car` `c` on((`b`.`nopol` = `c`.`nopol`))) join `account` `a` on((`c`.`email_customer` = `a`.`email`))) join `detail_booking` `db` on((`b`.`id_booking` = `db`.`id_booking`))) join `layanan_servis` `lv` on((`db`.`id_layanan_servis` = `lv`.`id_layanan_servis`))) left join `barang` `bar` on((`db`.`id_barang` = `bar`.`id_barang`))) WHERE (`a`.`role` = 'Customer') GROUP BY `b`.`tgl_booking`, `a`.`name` ORDER BY `b`.`tgl_booking` AS `DESCdesc` ASC  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_riwayat`  AS SELECT `b`.`tgl_booking` AS `tgl_booking`, `a`.`name` AS `nama_customer`, count(`b`.`id_booking`) AS `total_booking`, sum(`db`.`subtotal`) AS `total`, group_concat(distinct `lv`.`nama_layanan` order by `lv`.`nama_layanan` ASC separator ', ') AS `layanan`, group_concat(distinct `bar`.`nama_barang` order by `bar`.`nama_barang` ASC separator ', ') AS `barang` FROM (((((`booking` `b` join `car` `c` on((`b`.`nopol` = `c`.`nopol`))) join `account` `a` on((`c`.`email_customer` = `a`.`email`))) join `detail_booking` `db` on((`b`.`id_booking` = `db`.`id_booking`))) join `layanan_servis` `lv` on((`db`.`id_layanan_servis` = `lv`.`id_layanan_servis`))) left join `barang` `bar` on((`db`.`id_barang` = `bar`.`id_barang`))) WHERE (`a`.`role` = 'Customer') GROUP BY `b`.`tgl_booking`, `a`.`name` ORDER BY `b`.`tgl_booking` ASC ;
 
 --
 -- Indexes for dumped tables
@@ -500,6 +524,15 @@ ALTER TABLE `layanan_servis`
 --
 ALTER TABLE `review_customer`
   ADD CONSTRAINT `fk_email_cus` FOREIGN KEY (`email_customer`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `delete_expired_otp` ON SCHEDULE EVERY 1 MINUTE STARTS '2024-11-04 05:03:01' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM otp
+WHERE waktu < (NOW() - INTERVAL 5 MINUTE)$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
