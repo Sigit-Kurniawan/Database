@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 03, 2024 at 10:14 PM
+-- Generation Time: Nov 13, 2024 at 03:05 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -45,6 +45,7 @@ INSERT INTO `account` (`name`, `email`, `no_hp`, `password`, `role`, `photo`) VA
 ('citra', 'citra@gmail.com', '098765', '$2y$10$08XDnAW1SkafxrVENiNOY.LEbcapRxD1cRfMsjAcM8tFs9PJNR71y', 'customer', NULL),
 ('Danial', 'danial@gmail.com', '666666666', '$2y$10$b1xTQu64w6ORKa4bRGDPaOuRx0gmRZXqs9c137H4IJa/CmeEHqBYy', 'admin', NULL),
 ('lili', 'lili@gmail.com', '88888888', '$2y$10$xqJfo4r8KA5kyHKj1F/NYeJ8ZEYY9GPAB0BiCCh92mQLpW.KU.MUi', 'customer', NULL),
+('tes', 'n@gmail.com', '123', '$2y$10$ODyMI5nh0rqNiHkDuny9Pep.VcDoLoy4qRWNHJGTgjj1sjwZNVB12', 'customer', NULL),
 ('Naraya Albani', 'naraya.albani@gmail.com', '83832566069', 'Asd123@#', 'customer', 'naraya_albani.jpg'),
 ('Naraya', 'naraya@gmail.com', '23456789', '$2y$10$FNirsullykq.5ZmOS0j0BurkzPbxFjr4s0yEBFlA44uG1HTNtJtDm', 'customer', NULL),
 ('Rahayu', 'rahayu@gmail.com', '098765', '$2y$10$Vs4zTq4GKjKnlCxNJco5WuJBGSX./tyAHSsXPy30opR91qYEdlca2', 'customer', NULL),
@@ -58,19 +59,10 @@ INSERT INTO `account` (`name`, `email`, `no_hp`, `password`, `role`, `photo`) VA
 --
 
 CREATE TABLE `anggota_montir` (
-  `id_anggota_montir` char(5) NOT NULL,
+  `email_anggota_montir` varchar(30) NOT NULL,
   `nama_anggota_montir` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `no_hp` varchar(13) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `anggota_montir`
---
-
-INSERT INTO `anggota_montir` (`id_anggota_montir`, `nama_anggota_montir`, `no_hp`) VALUES
-('am001', 'dara', '222222222'),
-('am002', 'novia', '888888888'),
-('am003', 'nandita', '444444444');
 
 -- --------------------------------------------------------
 
@@ -103,7 +95,9 @@ CREATE TABLE `booking` (
   `tgl_booking` date NOT NULL,
   `total_biaya` int DEFAULT NULL,
   `metode_bayar` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `nopol` varchar(9) NOT NULL
+  `nopol` varchar(9) NOT NULL,
+  `status_bayar` int NOT NULL,
+  `status_pengerjaan` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -126,8 +120,10 @@ CREATE TABLE `car` (
 --
 
 INSERT INTO `car` (`nopol`, `merk`, `type`, `transmition`, `year`, `email_customer`) VALUES
-('H64H', 'Honda', 'Civic', 'manual', '2010', 'naraya.albani@gmail.com'),
-('T1234RE', 'Honda', 'Civic', 'auto', '2005', 'sigit@g.com');
+('AS1334ASD', 'Raya', 'Albani', 'manual', 2019, 'naraya.albani@gmail.com'),
+('P1234AB', 'Danial', 'Asia', 'manual', 2024, 'sigit@g.com'),
+('QW1234QWE', 'Citra', 'Rahayu', 'auto', 2017, 'naraya.albani@gmail.com'),
+('T1234RE', 'Honda', 'Civic', 'auto', 2005, 'sigit@g.com');
 
 -- --------------------------------------------------------
 
@@ -137,9 +133,16 @@ INSERT INTO `car` (`nopol`, `merk`, `type`, `transmition`, `year`, `email_custom
 
 CREATE TABLE `data_komponen` (
   `id_data_komponen` char(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `nama_komponen` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `id_data_servis` char(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+  `nama_komponen` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `data_komponen`
+--
+
+INSERT INTO `data_komponen` (`id_data_komponen`, `nama_komponen`) VALUES
+('DWI123', 'Ban'),
+('SDW143', 'Oli');
 
 -- --------------------------------------------------------
 
@@ -150,8 +153,18 @@ CREATE TABLE `data_komponen` (
 CREATE TABLE `data_servis` (
   `id_data_servis` char(7) NOT NULL,
   `nama_servis` varchar(30) NOT NULL,
-  `harga_servis` int NOT NULL
+  `harga_servis` int NOT NULL,
+  `id_data_komponen` char(7) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `data_servis`
+--
+
+INSERT INTO `data_servis` (`id_data_servis`, `nama_servis`, `harga_servis`, `id_data_komponen`) VALUES
+('GTS534', 'Tambah oli', 132400, 'SDW143'),
+('SWE235', 'Ganti ban', 12346, 'DWI123'),
+('TES123', 'Ganti oli', 12000, 'SDW143');
 
 -- --------------------------------------------------------
 
@@ -162,7 +175,7 @@ CREATE TABLE `data_servis` (
 CREATE TABLE `detail_booking` (
   `id_detail_booking` char(5) NOT NULL,
   `id_booking` char(5) NOT NULL,
-  `id_layanan_servis` char(5) NOT NULL,
+  `id_data_servis` char(5) NOT NULL,
   `id_barang` char(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `subtotal` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -216,28 +229,9 @@ DELIMITER ;
 CREATE TABLE `detail_servis_montir` (
   `id_det_servis_montir` char(7) NOT NULL,
   `id_detail_booking` char(5) NOT NULL,
-  `id_ketua_montir` char(5) NOT NULL,
-  `id_anggota_montir` char(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+  `email_ketua_montir` varchar(30) NOT NULL,
+  `email_anggota_montir` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `jenis_servis`
---
-
-CREATE TABLE `jenis_servis` (
-  `id_jenis_servis` char(5) NOT NULL,
-  `nama_servis` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `jenis_servis`
---
-
-INSERT INTO `jenis_servis` (`id_jenis_servis`, `nama_servis`) VALUES
-('SV111', 'Ban'),
-('SV112', 'Oli');
 
 -- --------------------------------------------------------
 
@@ -246,10 +240,10 @@ INSERT INTO `jenis_servis` (`id_jenis_servis`, `nama_servis`) VALUES
 --
 
 CREATE TABLE `ketua_montir` (
-  `id_ketua_montir` char(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `email_ketua_montir` varchar(30) NOT NULL,
   `nama_ketua_montir` varchar(40) NOT NULL,
-  `email_ketua_montir` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `no_hp` varchar(13) NOT NULL
+  `no_hp` varchar(13) NOT NULL,
+  `password` tinytext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -259,20 +253,11 @@ CREATE TABLE `ketua_montir` (
 --
 
 CREATE TABLE `layanan_servis` (
-  `id_jenis_servis` char(5) NOT NULL,
-  `id_layanan_servis` char(5) NOT NULL,
+  `id_data_servis` char(5) NOT NULL,
   `nama_layanan` varchar(30) NOT NULL,
-  `harga_layanan` int NOT NULL
+  `harga_layanan` int NOT NULL,
+  `nama_servis` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `layanan_servis`
---
-
-INSERT INTO `layanan_servis` (`id_jenis_servis`, `id_layanan_servis`, `nama_layanan`, `harga_layanan`) VALUES
-('SV111', 'LV001', 'Tambal Ban', 20000),
-('SV111', 'LV002', 'Gant Ban', 25000),
-('SV112', 'LV003', 'Ganti Oli', 30000);
 
 -- --------------------------------------------------------
 
@@ -285,14 +270,6 @@ CREATE TABLE `otp` (
   `otp_code` char(4) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `otp`
---
-
-INSERT INTO `otp` (`email`, `otp_code`, `time`) VALUES
-('tes', '3424', '2024-11-03 22:03:50'),
-('bjbj', '4363', '2024-11-03 22:07:00');
 
 -- --------------------------------------------------------
 
@@ -311,69 +288,24 @@ CREATE TABLE `review_customer` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `view_montir_orders`
+-- Stand-in structure for view `view_servis`
 -- (See below for the actual view)
 --
-CREATE TABLE `view_montir_orders` (
-`tgl_booking` date
-,`id_montir` char(5)
-,`nama_montir` varchar(40)
-,`status_montir` varchar(7)
-,`total_order` bigint
+CREATE TABLE `view_servis` (
+`harga_servis` int
+,`id_data_servis` char(7)
+,`nama_komponen` varchar(30)
+,`nama_servis` varchar(30)
 );
 
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `view_pemasukan`
--- (See below for the actual view)
+-- Structure for view `view_servis`
 --
-CREATE TABLE `view_pemasukan` (
-`tgl_booking` date
-,`total_pemasukan` decimal(32,0)
-);
+DROP TABLE IF EXISTS `view_servis`;
 
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `view_riwayat`
--- (See below for the actual view)
---
-CREATE TABLE `view_riwayat` (
-`tgl_booking` date
-,`nama_customer` varchar(40)
-,`total_booking` bigint
-,`total` decimal(32,0)
-,`layanan` text
-,`barang` text
-);
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_montir_orders`
---
-DROP TABLE IF EXISTS `view_montir_orders`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_montir_orders`  AS SELECT `b`.`tgl_booking` AS `tgl_booking`, `km`.`id_ketua_montir` AS `id_montir`, `km`.`nama_ketua_montir` AS `nama_montir`, 'Ketua' AS `status_montir`, count(distinct `db`.`id_detail_booking`) AS `total_order` FROM (((`detail_booking` `db` join `booking` `b` on((`db`.`id_booking` = `b`.`id_booking`))) join `detail_servis_montir` `ds` on((`db`.`id_detail_booking` = `ds`.`id_detail_booking`))) join `ketua_montir` `km` on((`ds`.`id_ketua_montir` = `km`.`id_ketua_montir`))) GROUP BY `b`.`tgl_booking`, `km`.`id_ketua_montir`, `km`.`nama_ketua_montir`union all select `b`.`tgl_booking` AS `tgl_booking`,`am`.`id_anggota_montir` AS `id_montir`,`am`.`nama_anggota_montir` AS `nama_montir`,'Anggota' AS `status_montir`,count(distinct `db`.`id_detail_booking`) AS `total_order` from (((`detail_booking` `db` join `booking` `b` on((`db`.`id_booking` = `b`.`id_booking`))) join `detail_servis_montir` `ds` on((`db`.`id_detail_booking` = `ds`.`id_detail_booking`))) join `anggota_montir` `am` on((`ds`.`id_anggota_montir` = `am`.`id_anggota_montir`))) group by `b`.`tgl_booking`,`am`.`id_anggota_montir`,`am`.`nama_anggota_montir` order by `tgl_booking` desc  ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_pemasukan`
---
-DROP TABLE IF EXISTS `view_pemasukan`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_pemasukan`  AS SELECT `booking`.`tgl_booking` AS `tgl_booking`, sum(`booking`.`total_biaya`) AS `total_pemasukan` FROM `booking` GROUP BY `booking`.`tgl_booking` ORDER BY `booking`.`tgl_booking` ASC ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_riwayat`
---
-DROP TABLE IF EXISTS `view_riwayat`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_riwayat`  AS SELECT `b`.`tgl_booking` AS `tgl_booking`, `a`.`name` AS `nama_customer`, count(`b`.`id_booking`) AS `total_booking`, sum(`db`.`subtotal`) AS `total`, group_concat(distinct `lv`.`nama_layanan` order by `lv`.`nama_layanan` ASC separator ', ') AS `layanan`, group_concat(distinct `bar`.`nama_barang` order by `bar`.`nama_barang` ASC separator ', ') AS `barang` FROM (((((`booking` `b` join `car` `c` on((`b`.`nopol` = `c`.`nopol`))) join `account` `a` on((`c`.`email_customer` = `a`.`email`))) join `detail_booking` `db` on((`b`.`id_booking` = `db`.`id_booking`))) join `layanan_servis` `lv` on((`db`.`id_layanan_servis` = `lv`.`id_layanan_servis`))) left join `barang` `bar` on((`db`.`id_barang` = `bar`.`id_barang`))) WHERE (`a`.`role` = 'Customer') GROUP BY `b`.`tgl_booking`, `a`.`name` ORDER BY `b`.`tgl_booking` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_servis`  AS SELECT `s`.`id_data_servis` AS `id_data_servis`, `s`.`nama_servis` AS `nama_servis`, `s`.`harga_servis` AS `harga_servis`, `k`.`nama_komponen` AS `nama_komponen` FROM (`data_servis` `s` join `data_komponen` `k` on((`s`.`id_data_komponen` = `k`.`id_data_komponen`)))  ;
 
 --
 -- Indexes for dumped tables
@@ -389,7 +321,7 @@ ALTER TABLE `account`
 -- Indexes for table `anggota_montir`
 --
 ALTER TABLE `anggota_montir`
-  ADD PRIMARY KEY (`id_anggota_montir`);
+  ADD PRIMARY KEY (`email_anggota_montir`);
 
 --
 -- Indexes for table `barang`
@@ -415,23 +347,23 @@ ALTER TABLE `car`
 -- Indexes for table `data_komponen`
 --
 ALTER TABLE `data_komponen`
-  ADD PRIMARY KEY (`id_data_komponen`),
-  ADD KEY `fk_data_servis` (`id_data_servis`);
+  ADD PRIMARY KEY (`id_data_komponen`);
 
 --
 -- Indexes for table `data_servis`
 --
 ALTER TABLE `data_servis`
-  ADD PRIMARY KEY (`id_data_servis`);
+  ADD PRIMARY KEY (`id_data_servis`),
+  ADD KEY `id_data_komponen` (`id_data_komponen`);
 
 --
 -- Indexes for table `detail_booking`
 --
 ALTER TABLE `detail_booking`
   ADD PRIMARY KEY (`id_detail_booking`),
-  ADD KEY `id_booking` (`id_booking`,`id_layanan_servis`,`id_barang`),
-  ADD KEY `fk_layanan` (`id_layanan_servis`),
-  ADD KEY `fk_barang` (`id_barang`);
+  ADD KEY `id_booking` (`id_booking`,`id_barang`),
+  ADD KEY `fk_barang` (`id_barang`),
+  ADD KEY `fk_data_servis` (`id_data_servis`);
 
 --
 -- Indexes for table `detail_servis_montir`
@@ -439,28 +371,20 @@ ALTER TABLE `detail_booking`
 ALTER TABLE `detail_servis_montir`
   ADD PRIMARY KEY (`id_det_servis_montir`),
   ADD KEY `fk_det_booking` (`id_detail_booking`),
-  ADD KEY `fk_ketua` (`id_ketua_montir`),
-  ADD KEY `fk_anggota` (`id_anggota_montir`);
-
---
--- Indexes for table `jenis_servis`
---
-ALTER TABLE `jenis_servis`
-  ADD PRIMARY KEY (`id_jenis_servis`);
+  ADD KEY `fk_ketua_montir` (`email_ketua_montir`),
+  ADD KEY `fk_anggota_montir` (`email_anggota_montir`);
 
 --
 -- Indexes for table `ketua_montir`
 --
 ALTER TABLE `ketua_montir`
-  ADD PRIMARY KEY (`id_ketua_montir`),
-  ADD KEY `email` (`email_ketua_montir`);
+  ADD PRIMARY KEY (`email_ketua_montir`);
 
 --
 -- Indexes for table `layanan_servis`
 --
 ALTER TABLE `layanan_servis`
-  ADD PRIMARY KEY (`id_layanan_servis`),
-  ADD KEY `fk_jenis_servis` (`id_jenis_servis`);
+  ADD PRIMARY KEY (`id_data_servis`);
 
 --
 -- Indexes for table `review_customer`
@@ -486,10 +410,10 @@ ALTER TABLE `car`
   ADD CONSTRAINT `fk_account_car` FOREIGN KEY (`email_customer`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `data_komponen`
+-- Constraints for table `data_servis`
 --
-ALTER TABLE `data_komponen`
-  ADD CONSTRAINT `fk_data_servis` FOREIGN KEY (`id_data_servis`) REFERENCES `data_servis` (`id_data_servis`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `data_servis`
+  ADD CONSTRAINT `data_servis_ibfk_1` FOREIGN KEY (`id_data_komponen`) REFERENCES `data_komponen` (`id_data_komponen`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detail_booking`
@@ -497,27 +421,15 @@ ALTER TABLE `data_komponen`
 ALTER TABLE `detail_booking`
   ADD CONSTRAINT `fk_barang` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_booking` FOREIGN KEY (`id_booking`) REFERENCES `booking` (`id_booking`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_layanan` FOREIGN KEY (`id_layanan_servis`) REFERENCES `layanan_servis` (`id_layanan_servis`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_data_servis` FOREIGN KEY (`id_data_servis`) REFERENCES `layanan_servis` (`id_data_servis`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detail_servis_montir`
 --
 ALTER TABLE `detail_servis_montir`
-  ADD CONSTRAINT `fk_anggota` FOREIGN KEY (`id_anggota_montir`) REFERENCES `anggota_montir` (`id_anggota_montir`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_anggota_montir` FOREIGN KEY (`email_anggota_montir`) REFERENCES `anggota_montir` (`email_anggota_montir`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_det_booking` FOREIGN KEY (`id_detail_booking`) REFERENCES `detail_booking` (`id_detail_booking`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_ketua` FOREIGN KEY (`id_ketua_montir`) REFERENCES `ketua_montir` (`id_ketua_montir`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `ketua_montir`
---
-ALTER TABLE `ketua_montir`
-  ADD CONSTRAINT `fk_account_montir` FOREIGN KEY (`email_ketua_montir`) REFERENCES `account` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `layanan_servis`
---
-ALTER TABLE `layanan_servis`
-  ADD CONSTRAINT `fk_jenis_servis` FOREIGN KEY (`id_jenis_servis`) REFERENCES `jenis_servis` (`id_jenis_servis`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_ketua_montir` FOREIGN KEY (`email_ketua_montir`) REFERENCES `ketua_montir` (`email_ketua_montir`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `review_customer`
