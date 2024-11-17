@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 17, 2024 at 03:14 PM
+-- Generation Time: Nov 17, 2024 at 04:59 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -106,8 +106,8 @@ CREATE TABLE `booking` (
   `nopol` varchar(9) NOT NULL,
   `status_bayar` enum('belum','sudah') NOT NULL,
   `status_pengerjaan` enum('pending','diterima','dikerjakan','selesai') NOT NULL,
-  `latitude` double(9,6) NOT NULL,
-  `longitude` double(9,6) NOT NULL
+  `latitude` double(9,6) DEFAULT NULL,
+  `longitude` double(9,6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
