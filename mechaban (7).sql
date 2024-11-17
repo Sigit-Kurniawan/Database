@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 15, 2024 at 10:30 PM
+-- Generation Time: Nov 17, 2024 at 03:14 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -41,13 +41,12 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`name`, `email`, `no_hp`, `password`, `role`, `photo`) VALUES
-('Naraya Albani', 'albani@gmail.com', '08123123123', '$2y$10$my8fPqd4z5piw5LXP5rsT.TED3z4JU2O/ooUtQY7.1dnhLmOwPFy2', 'customer', NULL),
+('Aza', 'aza@gmail.com', '23456', '3333', 'montir', NULL),
 ('citra', 'citra@gmail.com', '098765', '$2y$10$08XDnAW1SkafxrVENiNOY.LEbcapRxD1cRfMsjAcM8tFs9PJNR71y', 'customer', NULL),
 ('Danial', 'danial@gmail.com', '666666666', '$2y$10$b1xTQu64w6ORKa4bRGDPaOuRx0gmRZXqs9c137H4IJa/CmeEHqBYy', 'admin', NULL),
+('Keke', 'keke@gmail.com', '098765', '1234', 'montir', NULL),
 ('lili', 'lili@gmail.com', '88888888', '$2y$10$xqJfo4r8KA5kyHKj1F/NYeJ8ZEYY9GPAB0BiCCh92mQLpW.KU.MUi', 'customer', NULL),
-('tes', 'n@gmail.com', '123', '$2y$10$ODyMI5nh0rqNiHkDuny9Pep.VcDoLoy4qRWNHJGTgjj1sjwZNVB12', 'customer', NULL),
-('Naraya Albani', 'naraya.albani@gmail.com', '83832566069', '', 'customer', 'naraya_albani.jpg'),
-('Naraya', 'naraya@gmail.com', '23456789', '$2y$10$FNirsullykq.5ZmOS0j0BurkzPbxFjr4s0yEBFlA44uG1HTNtJtDm', 'customer', NULL),
+('Naila', 'naila@gmail.com', '1234567', '2222', 'montir', NULL),
 ('Rahayu', 'rahayu@gmail.com', '098765', '$2y$10$Vs4zTq4GKjKnlCxNJco5WuJBGSX./tyAHSsXPy30opR91qYEdlca2', 'customer', NULL),
 ('Sigit Bebas', 'sigit@g.com', '8523645879', 'Asd123@#', 'customer', NULL),
 ('Naraya Albani', 'v@g.com', '0852336124', 'Asd123@#', 'customer', NULL);
@@ -62,6 +61,16 @@ CREATE TABLE `anggota_montir` (
   `id_det_servis_montir` char(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `email_anggota_montir` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `anggota_montir`
+--
+
+INSERT INTO `anggota_montir` (`id_det_servis_montir`, `email_anggota_montir`) VALUES
+('dsm1', 'aza@gmail.com'),
+('dsm1', 'naila@gmail.com'),
+('dsm2', 'keke@gmail.com'),
+('dsm2', 'keke@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -96,8 +105,18 @@ CREATE TABLE `booking` (
   `metode_bayar` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `nopol` varchar(9) NOT NULL,
   `status_bayar` enum('belum','sudah') NOT NULL,
-  `status_pengerjaan` enum('pending','diterima','dikerjakan','selesai') NOT NULL
+  `status_pengerjaan` enum('pending','diterima','dikerjakan','selesai') NOT NULL,
+  `latitude` double(9,6) NOT NULL,
+  `longitude` double(9,6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `booking`
+--
+
+INSERT INTO `booking` (`id_booking`, `tgl_booking`, `total_biaya`, `metode_bayar`, `nopol`, `status_bayar`, `status_pengerjaan`, `latitude`, `longitude`) VALUES
+('B001', '2024-11-07', 162400, 'Tunai', 'AB1244O', 'belum', 'diterima', 12.345678, 93.123456),
+('B002', '2024-11-08', 74346, 'Tunai', 'AB1244P', 'belum', 'dikerjakan', 12.345678, 93.123456);
 
 -- --------------------------------------------------------
 
@@ -120,8 +139,9 @@ CREATE TABLE `car` (
 --
 
 INSERT INTO `car` (`created`, `nopol`, `merk`, `type`, `transmition`, `year`, `email_customer`) VALUES
-('2024-11-12 11:04:45', 'AS1234ASD', 'Suzuki', 'Kawasaki', 'manual', 2008, 'naraya.albani@gmail.com'),
-('2024-11-12 11:04:13', 'QW1234QWE', 'Honda', 'Civic', 'auto', 2019, 'naraya.albani@gmail.com');
+('2024-11-16 02:18:36', 'AB1244O', 'Honda', 'Honda', 'manual', 2011, 'rahayu@gmail.com'),
+('2024-11-16 02:18:45', 'AB1244P', 'Honda', 'Honda', 'manual', 2011, 'rahayu@gmail.com'),
+('2024-11-17 07:44:26', 'AB2346K', 'Honda', 'Honda', 'manual', 2011, 'rahayu@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -167,27 +187,89 @@ INSERT INTO `data_servis` (`id_data_servis`, `nama_servis`, `harga_servis`, `id_
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `detail_barang_booking`
+--
+
+CREATE TABLE `detail_barang_booking` (
+  `id_det_barang_booking` char(5) NOT NULL,
+  `id_detail_booking` char(5) NOT NULL,
+  `id_barang` char(5) NOT NULL,
+  `jumlah_barang` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `detail_barang_booking`
+--
+
+INSERT INTO `detail_barang_booking` (`id_det_barang_booking`, `id_detail_booking`, `id_barang`, `jumlah_barang`) VALUES
+('dbr01', 'db001', 'bar01', 2),
+('dbr02', 'db002', 'bar02', 5);
+
+--
+-- Triggers `detail_barang_booking`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_update_subtotal_after_barang` AFTER INSERT ON `detail_barang_booking` FOR EACH ROW BEGIN
+    DECLARE total_barang DECIMAL(10, 2);
+    DECLARE total_servis DECIMAL(10, 2);
+    
+    -- Hitung total harga barang berdasarkan id_detail_booking
+    SELECT COALESCE(SUM(b.harga * dbb.jumlah_barang), 0)
+    INTO total_barang
+    FROM detail_barang_booking dbb
+    JOIN barang b ON dbb.id_barang = b.id_barang
+    WHERE dbb.id_detail_booking = NEW.id_detail_booking;
+    
+    -- Hitung total harga servis berdasarkan id_detail_booking
+    SELECT COALESCE(SUM(ds.harga_servis), 0)
+    INTO total_servis
+    FROM detail_servis_booking dsb
+    JOIN data_servis ds ON dsb.id_data_servis = ds.id_data_servis
+    WHERE dsb.id_detail_booking = NEW.id_detail_booking;
+    
+    -- Update subtotal di tabel detail_booking setelah semua barang dan servis dihitung
+    UPDATE detail_booking
+    SET subtotal = total_barang + total_servis
+    WHERE id_detail_booking = NEW.id_detail_booking;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `detail_booking`
 --
 
 CREATE TABLE `detail_booking` (
   `id_detail_booking` char(5) NOT NULL,
   `id_booking` char(5) NOT NULL,
-  `id_barang` char(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `subtotal` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `detail_booking`
+--
+
+INSERT INTO `detail_booking` (`id_detail_booking`, `id_booking`, `subtotal`) VALUES
+('db001', 'B001', 162400),
+('db002', 'B002', 74346),
+('db003', 'B002', NULL);
 
 --
 -- Triggers `detail_booking`
 --
 DELIMITER $$
-CREATE TRIGGER `update_total_biaya` AFTER INSERT ON `detail_booking` FOR EACH ROW BEGIN
-    DECLARE total INT;
+CREATE TRIGGER `trg_update_total_biaya` AFTER UPDATE ON `detail_booking` FOR EACH ROW BEGIN
+    DECLARE total DECIMAL(10, 2);
     
-    SELECT SUM(subtotal) INTO total
+    -- Hitung total biaya berdasarkan subtotal di detail_booking
+    SELECT COALESCE(SUM(subtotal), 0)
+    INTO total
     FROM detail_booking
     WHERE id_booking = NEW.id_booking;
-
+    
+    -- Update total_biaya di tabel booking
     UPDATE booking
     SET total_biaya = total
     WHERE id_booking = NEW.id_booking;
@@ -206,6 +288,45 @@ CREATE TABLE `detail_servis_booking` (
   `id_data_servis` char(7) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `detail_servis_booking`
+--
+
+INSERT INTO `detail_servis_booking` (`id_detail_booking`, `id_data_servis`) VALUES
+('db001', 'GTS534'),
+('db002', 'SWE235'),
+('db002', 'TES123');
+
+--
+-- Triggers `detail_servis_booking`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_update_subtotal_after_servis` AFTER INSERT ON `detail_servis_booking` FOR EACH ROW BEGIN
+    DECLARE total_barang DECIMAL(10, 2);
+    DECLARE total_servis DECIMAL(10, 2);
+    
+    -- Hitung total harga barang berdasarkan id_detail_booking
+    SELECT COALESCE(SUM(b.harga * dbb.jumlah_barang), 0)
+    INTO total_barang
+    FROM detail_barang_booking dbb
+    JOIN barang b ON dbb.id_barang = b.id_barang
+    WHERE dbb.id_detail_booking = NEW.id_detail_booking;
+    
+    -- Hitung total harga servis berdasarkan id_detail_booking
+    SELECT COALESCE(SUM(ds.harga_servis), 0)
+    INTO total_servis
+    FROM detail_servis_booking dsb
+    JOIN data_servis ds ON dsb.id_data_servis = ds.id_data_servis
+    WHERE dsb.id_detail_booking = NEW.id_detail_booking;
+    
+    -- Update subtotal di tabel detail_booking setelah semua barang dan servis dihitung
+    UPDATE detail_booking
+    SET subtotal = total_barang + total_servis
+    WHERE id_detail_booking = NEW.id_detail_booking;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -217,6 +338,15 @@ CREATE TABLE `detail_servis_montir` (
   `id_detail_booking` char(5) NOT NULL,
   `email_ketua_montir` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `detail_servis_montir`
+--
+
+INSERT INTO `detail_servis_montir` (`id_det_servis_montir`, `id_detail_booking`, `email_ketua_montir`) VALUES
+('dsm1', 'db001', 'keke@gmail.com'),
+('dsm2', 'db002', 'aza@gmail.com'),
+('dsm3', 'db003', 'aza@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -247,16 +377,18 @@ CREATE TABLE `review_customer` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `riwayat`
+-- Stand-in structure for view `riwayatbooking`
 -- (See below for the actual view)
 --
-CREATE TABLE `riwayat` (
-`barang` text
+CREATE TABLE `riwayatbooking` (
+`tgl_booking` date
 ,`nama_customer` varchar(40)
+,`nopol` varchar(9)
+,`merk_mobil` varchar(20)
+,`barang` text
+,`jumlah_barang` decimal(32,0)
 ,`servis` text
-,`tgl_booking` date
-,`total` decimal(32,0)
-,`total_booking` bigint
+,`total_biaya` decimal(32,0)
 );
 
 -- --------------------------------------------------------
@@ -266,10 +398,10 @@ CREATE TABLE `riwayat` (
 -- (See below for the actual view)
 --
 CREATE TABLE `view_order_montir` (
-`email_montir` varchar(30)
+`tgl_booking` date
+,`email_montir` varchar(30)
 ,`nama_montir` varchar(40)
 ,`status_montir` varchar(7)
-,`tgl_booking` date
 ,`total_order` bigint
 );
 
@@ -291,20 +423,20 @@ CREATE TABLE `view_pemasukan` (
 -- (See below for the actual view)
 --
 CREATE TABLE `view_servis` (
-`harga_servis` int
-,`id_data_servis` char(7)
-,`nama_komponen` varchar(30)
+`id_data_servis` char(7)
 ,`nama_servis` varchar(30)
+,`harga_servis` int
+,`nama_komponen` varchar(30)
 );
 
 -- --------------------------------------------------------
 
 --
--- Structure for view `riwayat`
+-- Structure for view `riwayatbooking`
 --
-DROP TABLE IF EXISTS `riwayat`;
+DROP TABLE IF EXISTS `riwayatbooking`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `riwayat`  AS SELECT `b`.`tgl_booking` AS `tgl_booking`, `a`.`name` AS `nama_customer`, count(distinct `b`.`id_booking`) AS `total_booking`, sum(`db`.`subtotal`) AS `total`, group_concat(distinct `ds`.`nama_servis` order by `ds`.`nama_servis` ASC separator ', ') AS `servis`, group_concat(distinct `bar`.`nama_barang` order by `bar`.`nama_barang` ASC separator ', ') AS `barang` FROM ((((((`booking` `b` join `car` `c` on((`b`.`nopol` = `c`.`nopol`))) join `account` `a` on((`c`.`email_customer` = `a`.`email`))) join `detail_booking` `db` on((`b`.`id_booking` = `db`.`id_booking`))) join `detail_servis_booking` `dsb` on((`db`.`id_detail_booking` = `dsb`.`id_detail_booking`))) join `data_servis` `ds` on((`dsb`.`id_data_servis` = `ds`.`id_data_servis`))) left join `barang` `bar` on((`db`.`id_barang` = `bar`.`id_barang`))) WHERE (`a`.`role` = 'Customer') GROUP BY `b`.`tgl_booking`, `a`.`name` ORDER BY `b`.`tgl_booking` AS `DESCdesc` ASC  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `riwayatbooking`  AS SELECT `b`.`tgl_booking` AS `tgl_booking`, `a`.`name` AS `nama_customer`, `c`.`nopol` AS `nopol`, `c`.`merk` AS `merk_mobil`, group_concat(distinct `bar`.`nama_barang` order by `bar`.`nama_barang` ASC separator ', ') AS `barang`, sum(`dbb`.`jumlah_barang`) AS `jumlah_barang`, group_concat(distinct `ds`.`nama_servis` order by `ds`.`nama_servis` ASC separator ', ') AS `servis`, sum(`db`.`subtotal`) AS `total_biaya` FROM (((((((`booking` `b` join `car` `c` on((`b`.`nopol` = `c`.`nopol`))) join `account` `a` on((`c`.`email_customer` = `a`.`email`))) join `detail_booking` `db` on((`b`.`id_booking` = `db`.`id_booking`))) left join `detail_barang_booking` `dbb` on((`db`.`id_detail_booking` = `dbb`.`id_detail_booking`))) left join `barang` `bar` on((`dbb`.`id_barang` = `bar`.`id_barang`))) left join `detail_servis_booking` `dsb` on((`db`.`id_detail_booking` = `dsb`.`id_detail_booking`))) left join `data_servis` `ds` on((`dsb`.`id_data_servis` = `ds`.`id_data_servis`))) WHERE (`a`.`role` = 'Customer') GROUP BY `b`.`tgl_booking`, `a`.`name`, `c`.`nopol`, `c`.`merk` ORDER BY `b`.`tgl_booking` AS `DESCdesc` ASC  ;
 
 -- --------------------------------------------------------
 
@@ -384,12 +516,19 @@ ALTER TABLE `data_servis`
   ADD KEY `id_data_komponen` (`id_data_komponen`);
 
 --
+-- Indexes for table `detail_barang_booking`
+--
+ALTER TABLE `detail_barang_booking`
+  ADD PRIMARY KEY (`id_det_barang_booking`),
+  ADD KEY `fk_booking_det` (`id_detail_booking`),
+  ADD KEY `fk_barang` (`id_barang`);
+
+--
 -- Indexes for table `detail_booking`
 --
 ALTER TABLE `detail_booking`
   ADD PRIMARY KEY (`id_detail_booking`),
-  ADD KEY `id_booking` (`id_booking`,`id_barang`),
-  ADD KEY `fk_barang` (`id_barang`);
+  ADD KEY `id_booking` (`id_booking`);
 
 --
 -- Indexes for table `detail_servis_booking`
@@ -443,10 +582,16 @@ ALTER TABLE `data_servis`
   ADD CONSTRAINT `data_servis_ibfk_1` FOREIGN KEY (`id_data_komponen`) REFERENCES `data_komponen` (`id_data_komponen`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `detail_barang_booking`
+--
+ALTER TABLE `detail_barang_booking`
+  ADD CONSTRAINT `fk_barang` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_booking_det` FOREIGN KEY (`id_detail_booking`) REFERENCES `detail_booking` (`id_detail_booking`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `detail_booking`
 --
 ALTER TABLE `detail_booking`
-  ADD CONSTRAINT `fk_barang` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_booking` FOREIGN KEY (`id_booking`) REFERENCES `booking` (`id_booking`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
